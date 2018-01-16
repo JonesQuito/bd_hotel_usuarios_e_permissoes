@@ -85,5 +85,30 @@ CREATE TABLE atendimento(
 
 
 
+-- Função para adicionar hospedagem
+CREATE OR REPLACE FUNCTION adicionaHospedagem(re_cliente numeric, numero_quarto int) RETURNS void AS
+  $$
+  BEGIN
+    perform * from cliente where rg = rg_cliente;
+    if found then
+      perform * from quarto where upper(status) = 'D' and num_quarto = numero_quarto;
+      if found then
+        insert into hospedagem values (default, rg_cliente, numero_quarto, current_date, null, 'A');
+        update quarto set status = 'O' where num_quarto = numero_quarto;
+        RAISE NOTICE 'Hospedagem realizada com sucesso!';
+      else
+        RAISE NOTICE 'Quarto indisponível para hospedagem!';
+      end if;
+    else
+      RAISE EXCEPTION 'Clinte não cosnta no cadastro';
+    end if;
+  END;
+  $$
+  LANGUAGE plpgsql SECURITY DEFINER;
+
+
+
+
+
 
 
