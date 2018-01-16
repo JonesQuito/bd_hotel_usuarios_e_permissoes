@@ -29,9 +29,59 @@ CREATE TABLE quarto(
 	id_tipo INTEGER NOT NULL,
 	status CHAR(1) NOT NULL DEFAULT 'D',
 	primary key (num_quarto),
-	foreign key(id_tipo) references tipo_quarto (id_tipo),
+	foreign key(id_tipo) references tipo_quarto (id_tipo)
+	
 )WITHOUT OIDS;
 
+-- Tabela SERVIÇO
+CREATE TABLE servico(
+	id_servico SERIAL NOT NULL,
+	descricao VARCHAR(60) NOT NULL,
+	valor NUMERIC(9,2) NOT NULL,
+	PRIMARY KEY (id_servico)
+)WITHOUT OIDS;
+
+DROP TABLE servico
+
+-- Tabela RESERVA
+CREATE TABLE reserva(
+	id_reserva SERIAL NOT NULL,
+	rg NUMERIC NOT NULL,
+	num_quarto INTEGER NOT NULL,
+	dt_reserva DATE NOT NULL,
+	qtd_dias INTEGER NOT NULL,
+	data_entrada DATE NOT NULL,
+	status CHAR(1) NOT NULL DEFAULT 'A',
+	PRIMARY KEY (id_reserva),
+	FOREIGN KEY (rg) REFERENCES cliente (rg) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	FOREIGN KEY (num_quarto) REFERENCES quarto (num_quarto) ON UPDATE RESTRICT ON DELETE RESTRICT
+	
+)WITHOUT OIDS;
+
+
+
+-- Tabela HOSPEDAGEM
+CREATE TABLE hospedagem(
+	id_hospedagem SERIAL NOT NULL,
+	rg NUMERIC NOT NULL,
+	num_quarto INTEGER NOT NULL,
+	data_entrada DATE NOT NULL,
+	data_saida DATE,
+	status CHAR(1) NOT NULL,
+	PRIMARY KEY (id_hospedagem),
+	FOREIGN KEY (rg) REFERENCES cliente(rg) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	FOREIGN KEY (num_quarto) REFERENCES quarto (num_quarto) ON UPDATE RESTRICT ON DELETE RESTRICT
+)WITHOUT OIDS;
+
+-- Tabela ATENDIMENTO
+CREATE TABLE atendimento(
+	id_atendimento SERIAL NOT NULL,
+	id_servico INTEGER NOT NULL,
+	id_hospedagem INTEGER NOT NULL,
+	PRIMARY KEY (id_atendimento),
+	FOREIGN KEY (id_servico) REFERENCES servico (id_servico) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	FOREIGN KEY (id_hospedagem) REFERENCES hospedagem (id_hospedagem) ON UPDATE RESTRICT ON DELETE RESTRICT
+)WITHOUT OIDS;
 
 
 
